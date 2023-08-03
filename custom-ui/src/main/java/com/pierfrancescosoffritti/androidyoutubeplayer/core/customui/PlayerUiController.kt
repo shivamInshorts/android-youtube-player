@@ -28,6 +28,7 @@ interface PlayerUiController {
   fun showCustomAction2(show: Boolean): PlayerUiController
 
   fun showFullscreenButton(show: Boolean): PlayerUiController
+  fun showMuteButton(show: Boolean): PlayerUiController
   fun setFullscreenButtonClickListener(customFullscreenButtonClickListener: View.OnClickListener): PlayerUiController
 
   fun showMenuButton(show: Boolean): PlayerUiController

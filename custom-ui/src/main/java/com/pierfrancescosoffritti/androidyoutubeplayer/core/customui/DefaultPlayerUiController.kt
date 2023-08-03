@@ -48,6 +48,7 @@ class DefaultPlayerUiController(
   private val playPauseButton: ImageView = rootView.findViewById(R.id.play_pause_button)
   private val youTubeButton: ImageView = rootView.findViewById(R.id.youtube_button)
   private val fullscreenButton: ImageView = rootView.findViewById(R.id.fullscreen_button)
+  private val muteButton: ImageView = rootView.findViewById(R.id.mute_button)
 
   private val customActionLeft: ImageView = rootView.findViewById(R.id.custom_action_left_button)
   private val customActionRight: ImageView = rootView.findViewById(R.id.custom_action_right_button)
@@ -57,6 +58,7 @@ class DefaultPlayerUiController(
 
   private var onFullscreenButtonListener: View.OnClickListener
   private var onMenuButtonClickListener: View.OnClickListener
+  private var onMuteButtonListener: View.OnClickListener
 
   private var isPlaying = false
   private var isPlayPauseButtonEnabled = true
@@ -120,14 +122,19 @@ class DefaultPlayerUiController(
 
   init {
     onFullscreenButtonListener = View.OnClickListener {
-      isMatchParent = !isMatchParent
-      when (isMatchParent) {
-        true -> youTubePlayerView.matchParent()
-        false -> youTubePlayerView.wrapContent()
-      }
+//      isMatchParent = !isMatchParent
+//      when (isMatchParent) {
+//        true -> youTubePlayerView.matchParent()
+//        false -> youTubePlayerView.wrapContent()
+//      }
+//      fullScreenHelper.toggleFullscreen()
     }
 
     onMenuButtonClickListener = View.OnClickListener { youTubePlayerMenu.show(menuButton) }
+
+    onMuteButtonListener = View.OnClickListener {
+      youTubePlayerView.toggleMute();
+    }
 
     initClickListeners()
   }
@@ -256,6 +263,11 @@ class DefaultPlayerUiController(
 
   override fun showFullscreenButton(show: Boolean): PlayerUiController {
     fullscreenButton.visibility = if (show) View.VISIBLE else View.GONE
+    return this
+  }
+
+  override fun showMuteButton(show: Boolean): PlayerUiController {
+    muteButton.visibility = if (show) View.VISIBLE else View.GONE
     return this
   }
 

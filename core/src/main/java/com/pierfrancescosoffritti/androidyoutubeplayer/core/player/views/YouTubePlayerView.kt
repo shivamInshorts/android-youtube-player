@@ -13,6 +13,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.R
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.*
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.MuteHelper
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 
 private const val AUTO_INIT_ERROR = "YouTubePlayerView: If you want to initialize this view manually, " +
@@ -34,6 +35,7 @@ class YouTubePlayerView(
   constructor(context: Context, attrs: AttributeSet? = null) : this(context, attrs, 0)
 
   private val fullscreenListeners = mutableListOf<FullscreenListener>()
+  private val muteHelper = MuteHelper(this)
 
   /**
    * A single [FullscreenListener] that is always added to the WebView,
@@ -93,6 +95,15 @@ class YouTubePlayerView(
         IFramePlayerOptions.default
       )
     }
+    legacyTubePlayerView.addMuteListener(object : YoutubePlayerMuteListener {
+      override fun onYoutubePlayerMuteOn() {
+        muteHelper.muteOn()
+      }
+
+      override fun onYoutubePlayerMuteOff() {
+        muteHelper.muteOff()
+      }
+    })
   }
 
   /**
@@ -207,6 +218,22 @@ class YouTubePlayerView(
   fun addFullscreenListener(fullscreenListener: FullscreenListener) = fullscreenListeners.add(fullscreenListener)
 
   fun removeFullscreenListener(fullscreenListener: FullscreenListener) = fullscreenListeners.remove(fullscreenListener)
+
+  fun addMuteListener(muteListener: YoutubePlayerMuteListener): Boolean =
+    legacyTubePlayerView.addMuteListener(muteListener)
+
+  fun removeMuteListener(muteListener: YoutubePlayerMuteListener): Boolean =
+    legacyTubePlayerView.removeMuteListener(muteListener)
+
+  fun muteVideo() {
+    legacyTubePlayerView.muteVideo()
+  }
+
+  fun unMuteVideo() {
+    legacyTubePlayerView.unMuteVideo()
+  }
+
+  fun toggleMute() = muteHelper.toggleMute()
 
   /**
    * Convenience method to set the [YouTubePlayerView] width and height to match parent.

@@ -12,7 +12,9 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YoutubePlayerMuteListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.MuteHelper
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.NetworkObserver
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.PlaybackResumer
 
@@ -33,6 +35,7 @@ internal class LegacyYouTubePlayerView(
 
   private val networkObserver = NetworkObserver(context.applicationContext)
   private val playbackResumer = PlaybackResumer()
+  private val muteHelper = MuteHelper(this)
 
   internal var isYouTubePlayerReady = false
   private var initialize = { }
@@ -47,6 +50,7 @@ internal class LegacyYouTubePlayerView(
       LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     webViewYouTubePlayer.addListener(playbackResumer)
+//    muteHelper.addMuteListener(defaultPlayerUiController) FIXME
 
     // stop playing if the user loads a video but then leaves the app before the video starts playing.
     webViewYouTubePlayer.addListener(object : AbstractYouTubePlayerListener() {
@@ -196,5 +200,19 @@ internal class LegacyYouTubePlayerView(
    */
   fun enableBackgroundPlayback(enable: Boolean) {
     webViewYouTubePlayer.isBackgroundPlaybackEnabled = enable
+  }
+
+  fun addMuteListener(muteListener: YoutubePlayerMuteListener): Boolean =
+    muteHelper.addMuteListener(muteListener)
+
+  fun removeMuteListener(muteListener: YoutubePlayerMuteListener): Boolean =
+    muteHelper.removeMuteListener(muteListener)
+
+  fun muteVideo() {
+    muteHelper.muteOn()
+  }
+
+  fun unMuteVideo() {
+    muteHelper.muteOff()
   }
 }
